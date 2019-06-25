@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inheritJdk="true">
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<lib name="jackson-dataformat-yaml.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/ivy-devtool/lib/compile/jackson-dataformat-yaml.jar!/"/>
+	</lib>
+	<lib name="snakeyaml.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/ivy-devtool/lib/compile/snakeyaml.jar!/"/>
+	</lib>
+</component>

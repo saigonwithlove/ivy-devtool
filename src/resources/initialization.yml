@@ -1,0 +1,8 @@
+users:
+  - Developer:Developer
+
+globalVariables:
+#  - com_example_global_variable:example_value
+
+serverProperties:
+#  - com_example_property:example_value
