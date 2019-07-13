@@ -13,5 +13,6 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="lib" path="lib/compile/jackson-dataformat-yaml.jar"/>
 	<classpathentry kind="lib" path="lib/compile/snakeyaml.jar"/>
+	<classpathentry kind="lib" path="lib/provided/ch.ivyteam.ivy.java_7.0.8.201810041409.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

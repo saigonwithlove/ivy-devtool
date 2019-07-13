@@ -8,4 +8,7 @@
 	<lib name="snakeyaml.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/ivy-devtool/lib/compile/snakeyaml.jar!/"/>
 	</lib>
+	<lib name="ch.ivyteam.ivy.java_7.0.8.201810041409.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/ivy-devtool/lib/provided/ch.ivyteam.ivy.java_7.0.8.201810041409.jar!/"/>
+	</lib>
 </component>
