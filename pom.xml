@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>saigonwithlove</groupId>
   <artifactId>ivy-devtool</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.0</version>
   <packaging>iar</packaging>
   <organization>
     <name>Saigon with love</name>
