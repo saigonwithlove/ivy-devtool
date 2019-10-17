@@ -11,7 +11,6 @@ public class GlobalVariables {
     Preconditions.checkArgument(StringUtils.isNotEmpty(name));
     Preconditions.checkNotNull(value);
     Optional.ofNullable(application.findGlobalVariable(name))
-        .orElseThrow(() -> new IllegalArgumentException("Global variable not found: " + name))
-        .setValue(value);
+        .ifPresent(globalVariable -> globalVariable.setValue(value));
   }
 }

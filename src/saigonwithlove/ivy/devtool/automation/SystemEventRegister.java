@@ -11,8 +11,8 @@ import ch.ivyteam.ivy.server.ServerFactory;
 import ch.ivyteam.ivy.service.ServiceException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import saigonwithlove.ivy.devtool.configuration.GlobalVariables;
@@ -40,7 +40,7 @@ public class SystemEventRegister extends AbstractProcessStartEventBean {
     try {
       FileUtils.cleanDirectory(new File(".", false).getJavaFile());
       Ivy.log().warn("[ivy-devtool] Cleaned application folder.");
-    } catch (IOException ex) {
+    } catch (Exception ex) {
       Ivy.log().error("[ivy-devtool] Could not clean files.", ex);
     }
 
@@ -67,20 +67,24 @@ public class SystemEventRegister extends AbstractProcessStartEventBean {
       // END - INIT DEVELOPER USER
 
       // SET CUSTOM VALUE FOR GLOBAL VARIABLES
-      model
-          .getGlobalVariables()
-          .forEach(var -> GlobalVariables.setValue(application, var.getName(), var.getValue()));
+      Optional.ofNullable(model.getGlobalVariables())
+          .ifPresent(
+              globalVariables ->
+                  globalVariables.forEach(
+                      var -> GlobalVariables.setValue(application, var.getName(), var.getValue())));
       Ivy.log().warn("[ivy-devtool] Finished setting up Global Variables.");
       // END - SET CUSTOM VALUE FOR GLOBAL VARIABLES
 
       // SET SYSTEM PROPERTY
       IServer server = ServerFactory.getServer();
-      model
-          .getServerProperties()
-          .forEach(prop -> ServerProperties.setValue(server, prop.getName(), prop.getValue()));
+      Optional.ofNullable(model.getServerProperties())
+          .ifPresent(
+              properties ->
+                  properties.forEach(
+                      prop -> ServerProperties.setValue(server, prop.getName(), prop.getValue())));
       Ivy.log().warn("[ivy-devtool] Finished setting up System Properties.");
       // END - SET SYSTEM PROPERTY
-    } catch (IOException ex) {
+    } catch (Exception ex) {
       Ivy.log().error(ex);
     }
   }

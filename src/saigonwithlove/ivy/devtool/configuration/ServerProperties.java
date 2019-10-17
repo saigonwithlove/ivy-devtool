@@ -11,7 +11,6 @@ public class ServerProperties {
     Preconditions.checkArgument(StringUtils.isNotEmpty(name));
     Preconditions.checkNotNull(value);
     Optional.ofNullable(server.getApplicationConfigurationManager().getSystemProp(name))
-        .orElseThrow(() -> new IllegalArgumentException("Server property not found: " + name))
-        .setValue(value);
+        .ifPresent(property -> property.setValue(value));
   }
 }

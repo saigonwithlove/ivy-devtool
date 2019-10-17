@@ -1,13 +1,15 @@
 package saigonwithlove.ivy.devtool.automation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 public class InitializationModel {
   private List<User> users = new ArrayList<>();
-  private List<GlobalVariable> globalVariables =  new ArrayList<>();
-  private List<ServerProperties> serverProperties =  new ArrayList<>();
+  private List<GlobalVariable> globalVariables = new ArrayList<>();
+  private List<ServerProperty> serverProperties = new ArrayList<>();
 
   public List<User> getUsers() {
     return users;
@@ -25,11 +27,11 @@ public class InitializationModel {
     this.globalVariables = globalVariables;
   }
 
-  public List<ServerProperties> getServerProperties() {
+  public List<ServerProperty> getServerProperties() {
     return serverProperties;
   }
 
-  public void setServerProperties(List<ServerProperties> serverProperties) {
+  public void setServerProperties(List<ServerProperty> serverProperties) {
     this.serverProperties = serverProperties;
   }
 
@@ -42,7 +44,6 @@ public class InitializationModel {
       String[] params = StringUtils.split(token, ":");
       this.userName = params[0];
       this.password = params[1];
-
     }
 
     public String getPassword() {
@@ -59,9 +60,9 @@ public class InitializationModel {
     private String value;
 
     public GlobalVariable(String token) {
-      String[] params = StringUtils.split(token, ":");
-      this.name = params[0];
-      this.value = params[1];
+      Iterator<String> params = Arrays.asList(StringUtils.split(token, ":")).iterator();
+      this.name = params.next();
+      this.value = StringUtils.join(params, ":");
     }
 
     public String getName() {
@@ -73,11 +74,11 @@ public class InitializationModel {
     }
   }
 
-  public static class ServerProperties {
+  public static class ServerProperty {
     private String name;
     private String value;
 
-    public ServerProperties(String token) {
+    public ServerProperty(String token) {
       String[] params = StringUtils.split(token, ":");
       this.name = params[0];
       this.value = params[1];

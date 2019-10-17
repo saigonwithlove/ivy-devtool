@@ -20,10 +20,10 @@ An0 @GridStep f1 '' #zField
 An0 @PushWFArc f2 '' #zField
 >Proto An0 An0 Automation #zField
 An0 f3 type saigonwithlove.ivy.devtool.automation.AutomationData #txt
-An0 f3 400 143 30 30 0 15 #rect
+An0 f3 432 143 30 30 0 15 #rect
 An0 f3 @|EndIcon #fIcon
 An0 f5 expr out #txt
-An0 f5 174 158 400 158 #arcP
+An0 f5 174 158 432 158 #arcP
 An0 f4 outerBean "saigonwithlove.ivy.devtool.automation.SystemEventRegister" #txt
 An0 f4 outLink eventLink.ivp #txt
 An0 f4 type saigonwithlove.ivy.devtool.automation.AutomationData #txt
