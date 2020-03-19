@@ -10,9 +10,11 @@ import org.apache.commons.lang3.StringUtils;
 
 public class ProcessModelVersions {
 
-  public static void reload(String pmvIndicator) {
-    Preconditions.checkArgument(StringUtils.isNotBlank(pmvIndicator));
-    IProcessModelVersion pmv = Ivy.wf().getApplication().findProcessModelVersion(pmvIndicator);
+  public static void reload(String processModel, String processModelVersion) {
+    Preconditions.checkArgument(StringUtils.isNotBlank(processModel));
+    Preconditions.checkArgument(StringUtils.isNotBlank(processModelVersion));
+    IProcessModelVersion pmv =
+        Ivy.wf().getApplication().findProcessModelVersion(processModel + "$" + processModelVersion);
     reload(pmv);
   }
 

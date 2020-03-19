@@ -70,7 +70,7 @@ An0 f1 actionDecl 'saigonwithlove.ivy.devtool.automation.AutomationData out;
 An0 f1 actionTable 'out=in;
 ' #txt
 An0 f1 actionCode 'import saigonwithlove.ivy.devtool.engine.EngineApi;
-EngineApi.newInstance().handleRequest(ivy.request);' #txt
+EngineApi.newInstance().handleRequest(ivy.wf.getApplication(), ivy.request);' #txt
 An0 f1 security system #txt
 An0 f1 type saigonwithlove.ivy.devtool.automation.AutomationData #txt
 An0 f1 @C|.xml '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
