@@ -2,3 +2,6 @@ target
 lib
 src_dataClasses
 classes
+ivy-devtool.eml
+ivy-devtool.iml
+**/.DS_Store

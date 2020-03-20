@@ -15,6 +15,7 @@ public class ProcessModelVersions {
     Preconditions.checkArgument(StringUtils.isNotBlank(processModelVersion));
     IProcessModelVersion pmv =
         Ivy.wf().getApplication().findProcessModelVersion(processModel + "$" + processModelVersion);
+    Ivy.log().info("[ivy-devtool] Reload module: {0}", pmv.getName());
     reload(pmv);
   }
 
