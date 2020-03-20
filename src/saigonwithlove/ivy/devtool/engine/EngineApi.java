@@ -7,7 +7,7 @@ import saigonwithlove.ivy.devtool.configuration.GlobalVariables;
 
 public class EngineApi {
   private static final String PARAM_COMMAND = "command";
-  private static final String COMMAND_SEPARATOR = "$";
+  private static final String COMMAND_SEPARATOR = "\\$";
 
   public static EngineApi newInstance() {
     return new EngineApi();
