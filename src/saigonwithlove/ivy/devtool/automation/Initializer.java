@@ -42,17 +42,19 @@ public class Initializer {
       URL initializationYaml = Initializer.class.getResource("/resources/initialization.yml");
       InitializationModel model =
           objectMapper.readValue(initializationYaml, InitializationModel.class);
-      model
-          .getUsers()
-          .forEach(
-              user -> {
-                IUser ivyUser =
-                    Users.findUser(application, user.getUserName())
-                        .orElseGet(
-                            () ->
-                                Users.newUser(application, user.getUserName(), user.getPassword()));
-                Users.addRoles(ivyUser, Roles.findRoles(application));
-              });
+      Optional.ofNullable(model.getUsers())
+          .ifPresent(
+              users ->
+                  users.forEach(
+                      user -> {
+                        IUser ivyUser =
+                            Users.findUser(application, user.getUserName())
+                                .orElseGet(
+                                    () ->
+                                        Users.newUser(
+                                            application, user.getUserName(), user.getPassword()));
+                        Users.addRoles(ivyUser, Roles.findRoles(application));
+                      }));
       Ivy.log().info("[ivy-devtool] Finished setting up users.");
       // END - INIT DEVELOPER USER
 
@@ -67,9 +69,11 @@ public class Initializer {
 
       // SET SYSTEM PROPERTY
       IServer server = ServerFactory.getServer();
-      model
-          .getServerProperties()
-          .forEach(prop -> ServerProperties.setValue(server, prop.getName(), prop.getValue()));
+      Optional.ofNullable(model.getServerProperties())
+          .ifPresent(
+              serverProperties ->
+                  serverProperties.forEach(
+                      prop -> ServerProperties.setValue(server, prop.getName(), prop.getValue())));
       Ivy.log().info("[ivy-devtool] Finished setting up System Properties.");
       // END - SET SYSTEM PROPERTY
     } catch (IOException ex) {

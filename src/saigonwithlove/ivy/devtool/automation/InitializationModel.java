@@ -1,15 +1,14 @@
 package saigonwithlove.ivy.devtool.automation;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 public class InitializationModel {
-  private List<User> users = new ArrayList<>();
-  private List<GlobalVariable> globalVariables = new ArrayList<>();
-  private List<ServerProperty> serverProperties = new ArrayList<>();
+  private List<User> users;
+  private List<GlobalVariable> globalVariables;
+  private List<ServerProperty> serverProperties;
 
   public List<User> getUsers() {
     return users;
