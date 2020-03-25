@@ -19,7 +19,7 @@ public class EngineApi {
       if ("reload".equalsIgnoreCase(command[1])) {
         String pm = getParameter(request, "pm");
         String pmv = getParameter(request, "pmv");
-        ProcessModelVersions.reload(pm, pmv);
+        ProcessModelVersions.reload(application, pm, pmv);
       }
     }
 
