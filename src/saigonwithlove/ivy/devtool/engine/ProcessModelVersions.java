@@ -1,10 +1,12 @@
 package saigonwithlove.ivy.devtool.engine;
 
 import ch.ivyteam.ivy.application.ActivityOperationState;
+import ch.ivyteam.ivy.application.ILibrary;
 import ch.ivyteam.ivy.application.IProcessModel;
 import ch.ivyteam.ivy.application.IProcessModelVersion;
 import ch.ivyteam.ivy.deployment.restricted.DeploymentManagerFactory;
 import ch.ivyteam.ivy.environment.Ivy;
+import ch.ivyteam.ivy.java.JavaConfigurationNavigationUtil;
 import ch.ivyteam.util.concurrent.Poll;
 import com.google.common.base.Preconditions;
 import java.io.File;
@@ -34,6 +36,7 @@ public class ProcessModelVersions {
           .deploy(
               "System", "localhost", new NullProgressMonitor(), new DeploymentLogger(Ivy.log()));
       activate(pmv);
+      updateDependents(pmv);
     } catch (Exception ex) {
       Ivy.log().error(ex);
     } finally {
@@ -41,12 +44,26 @@ public class ProcessModelVersions {
     }
   }
 
+  private static void updateDependents(IProcessModelVersion pmv) {
+    pmv.getLibrary().getAllDependentLibraries().stream()
+        .map(ILibrary::getProcessModelVersion)
+        .forEach(
+            item -> {
+              deactivate(item);
+              JavaConfigurationNavigationUtil.getJavaConfiguration(item)
+                  .getClassLoaderHolder()
+                  .updateRepositories();
+              activate(item);
+              updateDependents(item);
+            });
+  }
+
   private static void removeBackup(IProcessModel pm) {
     DirectoryScanner scanner = new DirectoryScanner();
     scanner.setBasedir(pm.getFileDirectory());
     scanner.setIncludes(new String[] {"*Backup*.zip"});
     scanner.scan();
-    for (String backup: scanner.getIncludedFiles()) {
+    for (String backup : scanner.getIncludedFiles()) {
       try {
         FileUtils.forceDelete(new File(scanner.getBasedir() + "/" + backup));
         Ivy.log().info("Backup removed: {0}", backup);
