@@ -3,6 +3,7 @@ package saigonwithlove.ivy.devtool.engine;
 import ch.ivyteam.ivy.application.IApplication;
 import ch.ivyteam.ivy.request.IHttpRequest;
 import ch.ivyteam.ivy.request.IRequest;
+import ch.ivyteam.ivy.request.IResponse;
 import saigonwithlove.ivy.devtool.configuration.GlobalVariables;
 
 public class EngineApi {
@@ -13,7 +14,7 @@ public class EngineApi {
     return new EngineApi();
   }
 
-  public void handleRequest(IApplication application, IRequest request) {
+  public void handleRequest(IApplication application, IRequest request, IResponse response) {
     String[] command = getParameter(request, PARAM_COMMAND).split(COMMAND_SEPARATOR);
     if ("module".equalsIgnoreCase(command[0])) {
       if ("reload".equalsIgnoreCase(command[1])) {
