@@ -37,7 +37,7 @@ public class EngineApi {
         String value = getParameter(request, "value");
         GlobalVariables.setValue(application, name, value);
       }
-    } else if ("system-property".equalsIgnoreCase(command[0])) {
+    } else if ("server-property".equalsIgnoreCase(command[0])) {
       if ("get-all".equalsIgnoreCase(command[1])) {
         Map<String, String> systemProperties = ServerProperties.findAll(ServerFactory.getServer());
         HttpServletResponse httpServletResponse =
