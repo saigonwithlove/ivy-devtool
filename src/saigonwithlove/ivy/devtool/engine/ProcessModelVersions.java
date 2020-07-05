@@ -19,6 +19,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import saigonwithlove.ivy.devtool.deployment.DeploymentLogger;
 
 public class ProcessModelVersions {
   private static final String SYSTEM = "SYSTEM";
