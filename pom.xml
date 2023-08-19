@@ -1,62 +1,277 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>saigonwithlove</groupId>
   <artifactId>ivy-devtool</artifactId>
-  <version>0.2.3</version>
+  <version>0.2.4-SNAPSHOT</version>
   <packaging>iar</packaging>
   <organization>
     <name>Saigon with love</name>
   </organization>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <build-helper-maven-plugin.version>3.2.0</build-helper-maven-plugin.version>
+    <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+    <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
+    <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
+    <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
+
+    <!-- Lombok -->
+    <lombok.version>1.18.28</lombok.version>
+    <!-- END - Lombok -->
+
+    <plexus-utils.version>3.3.0</plexus-utils.version>
+
+    <!-- Override these properties to customize the build. -->
+    <ivy.project.jarDependencies.classpath/>
+    <project-build-plugin.version>7.0.1</project-build-plugin.version>
+    <ivy.engine.version>7.0.8</ivy.engine.version>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <!-- END - Override these properties to customize the build. -->
+  </properties>
+
   <dependencies>
-    <dependency>
-      <groupId>com.fasterxml.jackson.dataformat</groupId>
-      <artifactId>jackson-dataformat-yaml</artifactId>
-      <version>2.9.5</version>
-    </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
-      <version>3.3.0</version>
+      <version>${plexus-utils.version}</version>
     </dependency>
+
+    <!-- START: LOMBOK -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <!-- END: LOMBOK -->
   </dependencies>
+
   <build>
+    <sourceDirectory>${project.basedir}/src</sourceDirectory>
+    <outputDirectory>${project.basedir}/classes</outputDirectory>
+
     <plugins>
       <plugin>
         <groupId>com.axonivy.ivy.ci</groupId>
         <artifactId>project-build-plugin</artifactId>
-        <version>7.0.1</version>
+        <version>${project-build-plugin.version}</version>
         <extensions>true</extensions>
         <configuration>
-          <ivyVersion>7.0.8</ivyVersion>
+          <ivyVersion>${ivy.engine.version}</ivyVersion>
+          <osArchitecture>All_x64</osArchitecture>
+          <iarExcludes>
+            <!-- EXCLUDE LIB -->
+            <!-- Test libraries is only needed for compile and running tests. -->
+            <iarExclude>lib/test/**/*</iarExclude>
+            <iarExclude>lib/test</iarExclude>
+            <!-- Provided libraries already exist in Axon.ivy Engine. -->
+            <iarExclude>lib/provided/**/*</iarExclude>
+            <iarExclude>lib/provided</iarExclude>
+            <!-- END - EXCLUDE LIB -->
+
+            <!-- EXCLUDE TEST SOURCE -->
+            <iarExclude>test/**/*</iarExclude>
+            <iarExclude>test</iarExclude>
+            <!-- END - EXCLUDE TEST SOURCE -->
+
+            <!-- EXCLUDE GITHOOKS -->
+            <iarExclude>.githooks/**/*</iarExclude>
+            <iarExclude>.githooks</iarExclude>
+            <!-- END - EXCLUDE GITHOOKS -->
+
+            <!-- EXCLUDE FRONTEND -->
+            <iarExclude>frontend/**/*</iarExclude>
+            <iarExclude>frontend</iarExclude>
+            <!-- END - EXCLUDE FRONTEND -->
+          </iarExcludes>
+        </configuration>
+        <executions>
+          <!-- PROVIDE IVY AND IAR DEPENDENCIES CLASSPATH a Maven properties "maven.test.additionalClasspath" is created,
+            it contains Ivy Engine Core Classpath and Project's Ivy Dependencies Classpath, Maven Compiler will use this property to
+            build Java sources. -->
+          <execution>
+            <id>ivy-test-properties</id>
+            <goals>
+              <goal>ivy-test-properties</goal>
+            </goals>
+            <phase>compile</phase>
+          </execution>
+          <!-- END - PROVIDE IVY AND IAR DEPENDENCIES CLASSPATH -->
+        </executions>
+      </plugin>
+
+      <!-- CLEAN LIB DIRECTORY TO PREVENT OUTDATED FILES -->
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>${maven-clean-plugin.version}</version>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>lib/test</directory>
+              <includes>
+                <include>**/*</include>
+              </includes>
+              <followSymlinks>false</followSymlinks>
+            </fileset>
+            <fileset>
+              <directory>lib/compile</directory>
+              <includes>
+                <include>**/*</include>
+              </includes>
+              <followSymlinks>false</followSymlinks>
+            </fileset>
+            <fileset>
+              <directory>lib/provided</directory>
+              <includes>
+                <include>**/*</include>
+              </includes>
+              <followSymlinks>false</followSymlinks>
+            </fileset>
+          </filesets>
         </configuration>
       </plugin>
+      <!-- END - CLEAN LIB DIRECTORY TO PREVENT OUTDATED FILES -->
+
       <!-- COPY DEPENDENCIES TO LIB DIRECTORY -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>3.1.1</version>
+        <configuration>
+          <stripVersion>true</stripVersion>
+        </configuration>
         <executions>
           <!-- COPY COMPILE DEPENDENCIES -->
           <execution>
             <id>copy-compile-dependencies</id>
-            <phase>validate</phase>
+            <phase>initialize</phase>
             <goals>
               <goal>copy-dependencies</goal>
             </goals>
             <configuration>
               <outputDirectory>${project.basedir}/lib/compile</outputDirectory>
-              <stripVersion>true</stripVersion>
               <includeArtifactIds>
-                jackson-dataformat-yaml,
-                snakeyaml,
                 plexus-utils
               </includeArtifactIds>
             </configuration>
           </execution>
+          <!-- COPY PROVIDED DEPENDENCIES -->
+          <execution>
+            <id>copy-provided-dependencies</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.basedir}/lib/provided</outputDirectory>
+              <includeArtifactIds>
+                lombok
+              </includeArtifactIds>
+            </configuration>
+          </execution>
+          <!-- END - COPY PROVIDED DEPENDENCIES -->
+          <!-- PROVIDE PROJECT DEPENDENCIES CLASSPATH Maven Compiler will use this classpath to build Java sources. -->
+          <execution>
+            <goals>
+              <goal>build-classpath</goal>
+            </goals>
+            <phase>initialize</phase>
+            <configuration>
+              <outputProperty>ivy.project.mavenDependencies.classpath</outputProperty>
+              <pathSeparator>${path.separator}</pathSeparator>
+            </configuration>
+          </execution>
+          <!-- END - PROVIDE PROJECT DEPENDENCIES CLASSPATH -->
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>${build-helper-maven-plugin.version}</version>
+        <executions>
+          <!-- CONFIGURE SOURCE DIRECTORIES FOR MAVEN COMPILER Maven Compiler only has ${project.basedir}/src_hd as default
+            source, we need to manually add all Ivy source directories. -->
+          <execution>
+            <id>add-source-directories</id>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <phase>initialize</phase>
+            <configuration>
+              <sources>
+                <source>${project.basedir}/src_hd</source>
+                <source>${project.basedir}/src_ws</source>
+                <source>${project.basedir}/src_wsproc</source>
+                <source>${project.basedir}/src_dataClasses</source>
+              </sources>
+            </configuration>
+          </execution>
+          <!-- END - CONFIGURE SOURCE DIRECTORIES FOR MAVEN COMPILER -->
+
+          <!-- TRANSFORM IVY CLASSPATH TO MAVEN COMPILER FORMAT Ivy produce classpath in format "<classpath1>,<classpath2>,..."
+              we need to convert into format "<classpath1>:<classpath2>:..." supported by Maven Compiler. This configuration
+              must be placed after project-build-plugin -->
+          <execution>
+            <id>transform-ivy-classpath</id>
+            <goals>
+              <goal>regex-property</goal>
+            </goals>
+            <phase>compile</phase>
+            <configuration>
+              <value>${maven.test.additionalClasspath}</value>
+              <regex>,</regex>
+              <replacement>${path.separator}</replacement>
+              <name>ivy.project.ivyDependencies.classpath</name>
+            </configuration>
+          </execution>
+          <!-- END TRANSFORM IVY CLASSPATH TO MAVEN COMPILER FORMAT -->
+        </executions>
+      </plugin>
+
+      <!-- BUILD JAVA CODE WITH MAVEN COMPILER Ivy use Eclipse Compiler to compile Java sources, it has poor compatible
+          with Lombok and other Maven plugins, we decide to suppress Eclipse Compiler within Ivy (by patching Axon.ivy Engine) and
+          use Maven Compiler to compile Java sources, the process will follow: 1. Ivy's project-build-plugin: - Generate Java source
+          from Data Class - Generate WebService Java Source 2. maven-compiler-plugin: - Compile all Java sources -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven-compiler-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>compile-java-sources</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <phase>compile</phase>
+            <configuration>
+              <annotationProcessorPaths>
+                <path>
+                  <groupId>org.projectlombok</groupId>
+                  <artifactId>lombok</artifactId>
+                  <version>${lombok.version}</version>
+                </path>
+              </annotationProcessorPaths>
+              <!-- The "fork=true" is required to use "compilerArgs". -->
+              <fork>true</fork>
+              <compilerArgs>
+                <arg>-classpath</arg>
+                <arg>${ivy.project.ivyDependencies.classpath}${path.separator}${ivy.project.mavenDependencies.classpath}${path.separator}${ivy.project.jarDependencies.classpath}</arg>
+              </compilerArgs>
+              <source>${maven.compiler.source}</source>
+              <target>${maven.compiler.target}</target>
+              <useIncrementalCompilation>false</useIncrementalCompilation>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- END - BUILD JAVA CODE WITH MAVEN COMPILER -->
     </plugins>
   </build>
 </project>

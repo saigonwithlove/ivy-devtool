@@ -109,7 +109,7 @@ public class ProcessModelVersions {
   private static IProcessModelVersion getOrCreatePmv(
       IApplication application, String processModel, String processModelVersion) {
     IProcessModelVersion pmv =
-        Ivy.wf().getApplication().findProcessModelVersion(processModel + "$" + processModelVersion);
+        application.findProcessModelVersion(processModel + "$" + processModelVersion);
     if (pmv != null) {
       return pmv;
     } else {
@@ -126,5 +126,11 @@ public class ProcessModelVersions {
               Integer.parseInt(processModelVersion));
       return pmv;
     }
+  }
+
+  public static String status(IApplication application, String processModel, String processModelVersion) {
+    IProcessModelVersion pmv =
+        application.findProcessModelVersion(processModel + "$" + processModelVersion);
+    return pmv.getActivityOperationStateText();
   }
 }
