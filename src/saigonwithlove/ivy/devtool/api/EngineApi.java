@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.http.entity.ContentType;
 import saigonwithlove.ivy.devtool.configuration.GlobalVariables;
 import saigonwithlove.ivy.devtool.configuration.ServerProperties;
 import saigonwithlove.ivy.devtool.engine.ProcessModelVersions;
@@ -38,11 +37,12 @@ public class EngineApi {
         String pm = getParameter(request, PARAM_PROCESS_MODEL);
         String pmv = getParameter(request, PARAM_PROCESS_MODEL_VERSION);
         String status = ProcessModelVersions.status(application, pm, pmv);
-        ModuleProcessModelVersionStatusResponse responseContent = ModuleProcessModelVersionStatusResponse.builder()
-            .processModel(pm)
-            .processModelVersion(pmv)
-            .status(status)
-            .build();
+        ModuleProcessModelVersionStatusResponse responseContent =
+            ModuleProcessModelVersionStatusResponse.builder()
+                .processModel(pm)
+                .processModelVersion(pmv)
+                .status(status)
+                .build();
         writeResponseContent(response, responseContent);
       }
     } else if ("global-variable".equalsIgnoreCase(command[0])) {

@@ -19,6 +19,7 @@
     <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
     <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
     <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
+    <spotless-maven-plugin.version>2.30.0</spotless-maven-plugin.version>
 
     <!-- Lombok -->
     <lombok.version>1.18.28</lombok.version>
@@ -272,6 +273,21 @@
         </executions>
       </plugin>
       <!-- END - BUILD JAVA CODE WITH MAVEN COMPILER -->
+
+      <!-- SPOTLESS -->
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>${spotless-maven-plugin.version}</version>
+        <configuration>
+          <java>
+            <googleJavaFormat>
+              <reflowLongStrings>true</reflowLongStrings>
+            </googleJavaFormat>
+          </java>
+        </configuration>
+      </plugin>
+      <!-- END - SPOTLESS -->
     </plugins>
   </build>
 </project>

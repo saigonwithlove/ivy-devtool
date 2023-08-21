@@ -128,7 +128,8 @@ public class ProcessModelVersions {
     }
   }
 
-  public static String status(IApplication application, String processModel, String processModelVersion) {
+  public static String status(
+      IApplication application, String processModel, String processModelVersion) {
     IProcessModelVersion pmv =
         application.findProcessModelVersion(processModel + "$" + processModelVersion);
     return pmv.getActivityOperationStateText();

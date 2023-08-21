@@ -17,6 +17,3 @@ public class ModuleProcessModelVersionStatusResponse {
   private String processModelVersion;
   private String status;
 }
-
-
-
